@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>검색</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">약 검색</h1>
+        <form id="searchForm" class="row row-cols-lg-auto align-items-center mb-4">
+            <div class="col-12">
+                <input
+                        id="queryInput"
+                        class="form-control"
+                        type="text"
+                        name="query"
+                        placeholder="약명을 입력하세요"
+                        required>
+            </div>
+            <div class="col-12">
+                <select id="sortInput" class="form-select" name="sort">
+                    <option value="up" selected>오름차순</option>
+                    <option value="down">내림차순</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <input
+                        id="pageInput"
+                        class="form-control"
+                        type="number"
+                        name="pageNo"
+                        placeholder="페이지 번호"
+                        min="1"
+                        required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">검색</button>
+            </div>
+        </form>
+        <div id="resultsContainer" class="mb-4">
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = document.getElementById('queryInput').value;
+            const sort = document.getElementById('sortInput').value;
+            const page = parseInt(document.getElementById('pageInput').value, 10) || 1;
+            fetchResults(query, sort, page);
+        });
+
+        async function fetchResults(query, sort, pageno) {
+            try {
+                const response = await axios.get(`/api/v1/search`, {
+                    params: { query, sort, pageno }
+                });
+                const medicines = response.data || [];
+                showResults(medicines);
+            } catch (error) {
+                console.error('Error fetching results:', error);
+            }
+        }
+
+        function showResults(medicines) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            if (medicines.length === 0) {
+                resultsContainer.innerHTML = `
+                                                <div class="alert alert-warning text-center" role="alert">
+                                                    검색 결과가 없습니다.
+                                                </div>
+                                            `;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'table table-striped table-hover';
+
+            table.innerHTML = `
+                                <thead>
+                                    <tr>
+                                        <th scope="col">사진</th>
+                                        <th scope="col">제품명</th>
+                                        <th scope="col">제조사</th>
+                                        <th scope="col">추가</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            `;
+
+            const tableBody = table.querySelector('tbody');
+
+            medicines.forEach(medicine => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                                    <td>
+                                        <img src="${medicine.itemImage || 'https://via.placeholder.com/150'}" alt="${medicine.itemName}" style="width: 100px; height: auto;">
+                                    </td>
+                                    <td>${medicine.itemName}</td>
+                                    <td>${medicine.entpName}</td>
+                                    <td>
+                                        <button class="btn btn-primary add-btn"
+                                                data-medicine='${JSON.stringify(medicine)}'>
+                                            추가
+                                        </button>
+                                    </td>
+                                `;
+
+                tableBody.appendChild(row);
+            });
+
+            resultsContainer.appendChild(table);
+
+            document.querySelectorAll('.add-btn').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    const medicineData = JSON.parse(event.target.dataset.medicine);
+                    console.log(medicineData);
+                    addMedicine(medicineData);
+                });
+            });
+        }
+
+        async function addMedicine(medicineData) {
+            try {
+                const response = await axios.post('http://localhost:8082/api/v1/medicine', medicineData);
+                alert("추가가 완료되었습니다.");
+            } catch (error) {
+                console.error('Error adding medicine:', error);
+            }
+        }
+    </script>
+</body>
+</html>
+

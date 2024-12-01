@@ -1,0 +1,22 @@
+{{>layouts/header4}}
+{{#member}}
+    <form class="container" action="/members/mupdate" method="post">
+        <input type="hidden" name="id" value={{id}}>
+
+        <div class="mb-3">
+            <label class="form-label">복용중인 약품</label>
+            <textarea class="form-control" name="medicine">{{medicine}}</textarea>
+        </div>
+
+        <!-----검색 링크----->
+        <a href="" class="btn btn-danger">약품 검색</a>
+
+        <!-----삭제 링크----->
+        <a href="/members/{{member.id}}/mdelete" class="btn btn-danger">약품 삭제</a>
+
+        <!---수정링크--->
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+        <a href="/members/{{id}}/edit">Back</a>
+    </form>
+{{/member}}
+{{>layouts/footer}}

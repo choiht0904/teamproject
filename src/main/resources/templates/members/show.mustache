@@ -1,0 +1,14 @@
+{{>layouts/header3}}
+
+<div class="container mb-3">
+    {{#member}}
+        <span> {{id}}  </span>|<span class="p-3"> {{email}}</span>|<span class="p-3"> {{password}}</span>
+    {{/member}}
+</div>
+<!--수정링크-->
+<a href = "/members/{{member.id}}/edit" class="btn btn-primary">회원정보</a>
+<!--삭제링크-->
+<a href = "/members/{{member.id}}/delete" class="btn btn-danger">회원 삭제</a>
+<a href="/members">회원 목록 페이지</a>
+
+{{>layouts/footer}}

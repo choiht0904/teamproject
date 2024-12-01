@@ -1,0 +1,56 @@
+[1mdiff --git a/build.gradle b/build.gradle[m
+[1mindex d577567..00e71fa 100644[m
+[1m--- a/build.gradle[m
+[1m+++ b/build.gradle[m
+[36m@@ -23,6 +23,7 @@[m [mdependencies {[m
+     implementation 'org.springframework.boot:spring-boot-starter-security'[m
+     implementation 'org.springframework.boot:spring-boot-starter-web'[m
+     implementation 'org.modelmapper:modelmapper:2.4.2'[m
+[32m+[m[32m    implementation 'org.projectlombok:lombok'[m
+     compileOnly 'org.projectlombok:lombok'[m
+     annotationProcessor 'org.projectlombok:lombok'[m
+     runtimeOnly 'com.h2database:h2'[m
+[1mdiff --git a/src/main/java/com/example/teamproject/TeamprojectApplication.java b/src/main/java/com/example/teamproject/TeamprojectApplication.java[m
+[1mindex fc10a38..c6c9f82 100644[m
+[1m--- a/src/main/java/com/example/teamproject/TeamprojectApplication.java[m
+[1m+++ b/src/main/java/com/example/teamproject/TeamprojectApplication.java[m
+[36m@@ -2,7 +2,9 @@[m [mpackage com.example.teamproject;[m
+ [m
+ import org.springframework.boot.SpringApplication;[m
+ import org.springframework.boot.autoconfigure.SpringBootApplication;[m
+[32m+[m[32mimport org.springframework.data.jpa.repository.config.EnableJpaAuditing;[m
+ [m
+[32m+[m[32m@EnableJpaAuditing[m
+ @SpringBootApplication[m
+ public class TeamprojectApplication {[m
+ [m
+[1mdiff --git a/src/main/resources/application.properties b/src/main/resources/application.properties[m
+[1mindex b18af4e..4319082 100644[m
+[1m--- a/src/main/resources/application.properties[m
+[1m+++ b/src/main/resources/application.properties[m
+[36m@@ -1 +1,25 @@[m
+ spring.application.name=teamproject[m
+[32m+[m
+[32m+[m[32m#encoding set UTF-8[m
+[32m+[m[32mserver.servlet.encoding.charset=UTF-8[m
+[32m+[m[32mserver.servlet.encoding.force=true[m
+[32m+[m[32m#H2 database connect configuration[m
+[32m+[m[32mspring.datasource.url=jdbc:h2:mem:testdb;[m
+[32m+[m[32mspring.datasource.driverClassName=org.h2.Driver[m
+[32m+[m[32mspring.datasource.username=sa[m
+[32m+[m[32mspring.datasource.password=[m
+[32m+[m[32m# H2 db console open[m
+[32m+[m[32mspring.h2.console.enabled=true[m
+[32m+[m[32m# SQL display[m
+[32m+[m[32mspring.jpa.show-sql=true[m
+[32m+[m[32m#Hibernate sql display[m
+[32m+[m[32mspring.jpa.properties.hibernate.format_sql=true[m
+[32m+[m[32m#Thymeleaf(?? ???)[m
+[32m+[m[32mspring.thymeleaf.prefix=classpath:/templates/[m
+[32m+[m[32mspring.thymeleaf.suffix=.html[m
+[32m+[m[32mspring.thymeleaf.mode=HTML[m
+[32m+[m[32mspring.thymeleaf.encoding=UTF-8[m
+[32m+[m[32mspring.thymeleaf.cache=false[m
+[32m+[m
+[32m+[m[32mspring.jpa.defer-datasource-initialization=true[m
+[32m+[m[32mspring.sql.init.mode=always[m

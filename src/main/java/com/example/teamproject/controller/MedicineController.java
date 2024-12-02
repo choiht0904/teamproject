@@ -21,6 +21,9 @@ public class MedicineController {
     @GetMapping("/medicine")
     public String showMedicine(Model model, HttpSession session) {
         Long id = Long.parseLong(session.getAttribute("id").toString());
+        if(id == null) {
+            return "/login";
+        }
         model.addAttribute("medicines", medicineService.getMedicineListByUserId(id));
         return "showMedicine";
     }
